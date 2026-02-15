@@ -1,0 +1,54 @@
+{% extends "papers/base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="text-primary mb-4"><i class="bi bi-people-fill"></i> Admin Dashboard</h2>
+
+<div class="row g-4">
+
+    <!-- Users Card -->
+    <div class="col-md-6">
+        <div class="card shadow p-4">
+            <h4 class="text-primary"><i class="bi bi-people"></i> All Users</h4>
+            <table class="table table-striped mt-3">
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                </tr>
+
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.role }}</td>
+                    <td>{{ u.email }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <!-- Papers Card -->
+    <div class="col-md-6">
+        <div class="card shadow p-4">
+            <h4 class="text-primary"><i class="bi bi-file-earmark-text"></i> All Papers</h4>
+            <table class="table table-striped mt-3">
+                <tr>
+                    <th>Title</th>
+                    <th>Student</th>
+                    <th>Status</th>
+                </tr>
+
+                {% for paper in papers %}
+                <tr>
+                    <td>{{ paper.title }}</td>
+                    <td>{{ paper.student }}</td>
+                    <td>{{ paper.status }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

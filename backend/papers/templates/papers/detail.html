@@ -1,0 +1,33 @@
+{% extends "papers/base.html" %}
+{% block title %}Paper Details{% endblock %}
+
+{% block content %}
+
+<div class="card shadow p-4">
+    <h2 class="text-primary">
+        <i class="bi bi-file-earmark-text"></i> {{ paper.title }}
+    </h2>
+
+    <p><strong>Field:</strong> {{ paper.field }}</p>
+    <p><strong>Keywords:</strong> {{ paper.keywords }}</p>
+    <p><strong>Status:</strong> <span class="badge bg-info">{{ paper.status }}</span></p>
+    <p><strong>Teacher:</strong> {{ paper.teacher }}</p>
+    <p><strong>Submitted on:</strong> {{ paper.submission_date }}</p>
+
+    <hr>
+
+    <h5 class="fw-bold text-secondary">Abstract</h5>
+    <p>{{ paper.abstract }}</p>
+
+    <a href="{{ paper.file.url }}" class="btn btn-warning mt-3" download>
+        <i class="bi bi-download"></i> Download Paper
+    </a>
+
+    {% if user.role == "teacher" %}
+        <a href="{% url 'review_paper' paper.id %}" class="btn btn-primary mt-3 ms-2">
+            <i class="bi bi-pencil-square"></i> Review Paper
+        </a>
+    {% endif %}
+</div>
+
+{% endblock %}

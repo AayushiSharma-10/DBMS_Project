@@ -1,0 +1,51 @@
+{% extends "papers/base.html" %}
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-5">
+    <h1 class="fw-bold text-primary">University Research Paper Portal</h1>
+    <p class="lead text-secondary">Choose your role to continue</p>
+</div>
+
+<div class="row justify-content-center g-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-lg text-center p-4">
+            <i class="bi bi-shield-lock display-4 text-primary"></i>
+            <h3 class="mt-3">Admin</h3>
+            <p>Manage users & papers.</p>
+            <a href="/admin/" class="btn btn-primary w-100">Admin Login</a>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-lg text-center p-4">
+            <i class="bi bi-person-check-fill display-4 text-success"></i>
+            <h3 class="mt-3">Teacher</h3>
+            <p>Review and grade student papers.</p>
+            <a href="{% url 'login' %}?role=teacher" class="btn btn-success w-100">Teacher Login</a>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-lg text-center p-4">
+            <i class="bi bi-mortarboard-fill display-4 text-warning"></i>
+            <h3 class="mt-3">Student</h3>
+            <p>Submit and track research papers.</p>
+            <a href="{% url 'login' %}?role=student" class="btn btn-warning w-100">Student Login</a>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-lg text-center p-4">
+            <i class="bi bi-person-plus-fill display-4 text-dark"></i>
+            <h3 class="mt-3">New User</h3>
+            <p>Create a new account.</p>
+            <a href="{% url 'register' %}" class="btn btn-dark w-100">Register</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

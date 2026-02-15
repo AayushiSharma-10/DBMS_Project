@@ -1,0 +1,37 @@
+{% extends "papers/base.html" %}
+{% block title %}Home - Paper Portal{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">All Papers</h2>
+
+<form method="GET" class="row g-3 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="q" class="form-control" placeholder="Search papers..." value="{{ query }}">
+    </div>
+    <div class="col-md-3">
+        <select name="status" class="form-select">
+            <option value="">All Status</option>
+            <option value="submitted">Submitted</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="revision">Needs Revision</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+<div class="list-group shadow-lg">
+    {% for paper in papers %}
+        <a href="{% url 'detail' paper.pk %}" class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between">
+                <strong>{{ paper.title }}</strong>
+                <span class="badge bg-info">{{ paper.status }}</span>
+            </div>
+        </a>
+    {% empty %}
+        <p>No papers found.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

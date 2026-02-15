@@ -1,0 +1,34 @@
+{% extends "papers/base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="text-primary mb-3"><i class="bi bi-journal-check"></i> Teacher Dashboard</h2>
+
+<div class="card shadow p-3">
+    <table class="table table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>Student</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Review</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for paper in papers %}
+            <tr>
+                <td>{{ paper.student.username }}</td>
+                <td>{{ paper.title }}</td>
+                <td><span class="badge bg-info">{{ paper.status }}</span></td>
+                <td>
+                    <a href="{% url 'review_paper' paper.id %}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-search"></i> Open
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

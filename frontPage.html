@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Portal - Academic Paper Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --secondary-dark: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --light-gray: #f8f9fa;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .login-container, .dashboard {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .user-type-selector {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        
+        .user-type-selector button {
+            flex: 1;
+            padding: 0.75rem;
+            background-color: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
+        }
+        
+        .user-type-selector button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .paper-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        .paper-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+            transition: transform 0.3s;
+        }
+        
+        .paper-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .paper-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .paper-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .paper-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-submitted {
+            background-color: #e3f2fd;
+            color: var(--primary);
+        }
+        
+        .status-reviewed {
+            background-color: #e8f5e9;
+            color: var(--secondary);
+        }
+        
+        .status-revision {
+            background-color: #fff3e0;
+            color: var(--warning);
+        }
+        
+        .paper-meta {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .paper-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .paper-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .upload-form {
+            margin-top: 2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .review-form {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background-color: var(--light-gray);
+            border-radius: var(--radius);
+        }
+        
+        .rating {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        
+        .star {
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .star.active {
+            color: var(--warning);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #bdc3c7;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .paper-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .paper-actions {
+                width: 100%;
+            }
+            
+            .paper-actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Research Portal</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" id="home-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" id="about-link"><i class="fas fa-info-circle"></i> About</a></li>
+                    <li><a href="#" id="contact-link"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button id="login-btn" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Login Section -->
+        <section id="login-section" class="login-container hidden">
+            <h2>Login to Research Portal</h2>
+            <p class="form-group">Access your academic dashboard</p>
+            
+            <div class="user-type-selector">
+                <button id="student-login-btn" class="active"><i class="fas fa-user-graduate"></i> Student Login</button>
+                <button id="teacher-login-btn"><i class="fas fa-chalkboard-teacher"></i> Teacher Login</button>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+            </form>
+            
+            <div id="demo-accounts" class="form-group">
+                <p><strong>Demo Accounts:</strong></p>
+                <p><i class="fas fa-user-graduate"></i> Student: username: student1, password: pass123</p>
+                <p><i class="fas fa-chalkboard-teacher"></i> Teacher: username: teacher1, password: pass123</p>
+            </div>
+        </section>
+
+        <!-- Student Dashboard -->
+        <section id="student-dashboard" class="dashboard hidden">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-user-graduate"></i> Student Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="student-avatar">JS</div>
+                    <div>
+                        <span>Welcome, <span id="student-name">John Student</span></span>
+                        <button id="student-logout" class="btn btn-danger" style="margin-left: 1rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value" id="student-papers-count">2</div>
+                    <div class="stat-label">Papers Submitted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="student-reviewed-count">1</div>
+                    <div class="stat-label">Papers Reviewed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="student-revision-count">0</div>
+                    <div class="stat-label">Needs Revision</div>
+                </div>
+            </div>
+            
+            <div id="student-alert"></div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="upload">Upload Paper</div>
+                <div class="tab" data-tab="submissions">My Submissions</div>
+                <div class="tab" data-tab="notifications">Notifications</div>
+            </div>
+            
+            <div class="tab-content active" id="upload-tab">
+                <h3><i class="fas fa-upload"></i> Upload Research Paper</h3>
+                <form id="upload-form" class="upload-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paper-title">Paper Title</label>
+                            <input type="text" id="paper-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paper-keywords">Keywords</label>
+                            <input type="text" id="paper-keywords" placeholder="Separate with commas">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paper-abstract">Abstract</label>
+                        <textarea id="paper-abstract" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="paper-teacher">Select Teacher</label>
+                            <select id="paper-teacher" required>
+                                <option value="">-- Select a teacher --</option>
+                                <!-- Teachers will be populated from database -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="paper-field">Research Field</label>
+                            <select id="paper-field" required>
+                                <option value="">-- Select field --</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Engineering">Engineering</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paper-file">Upload Paper (PDF)</label>
+                        <input type="file" id="paper-file" accept=".pdf" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Paper</button>
+                </form>
+            </div>
+            
+            <div class="tab-content" id="submissions-tab">
+                <h3><i class="fas fa-file-alt"></i> My Submitted Papers</h3>
+                <div id="student-papers" class="paper-list">
+                    <!-- Papers will be populated from database -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="notifications-tab">
+                <h3><i class="fas fa-bell"></i> Notifications</h3>
+                <div id="student-notifications" class="paper-list">
+                    <!-- Notifications will be populated from database -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Teacher Dashboard -->
+        <section id="teacher-dashboard" class="dashboard hidden">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Teacher Dashboard</h2>
+                <div class="user-info">
+                    <div class="user-avatar" id="teacher-avatar">DS</div>
+                    <div>
+                        <span>Welcome, <span id="teacher-name">Dr. Smith</span></span>
+                        <button id="teacher-logout" class="btn btn-danger" style="margin-left: 1rem;"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value" id="teacher-papers-count">3</div>
+                    <div class="stat-label">Papers to Review</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="teacher-reviewed-count">5</div>
+                    <div class="stat-label">Papers Reviewed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="teacher-students-count">8</div>
+                    <div class="stat-label">Students</div>
+                </div>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" data-tab="pending">Pending Review</div>
+                <div class="tab" data-tab="reviewed">Reviewed Papers</div>
+                <div class="tab" data-tab="students">My Students</div>
+            </div>
+            
+            <div class="tab-content active" id="pending-tab">
+                <h3><i class="fas fa-tasks"></i> Papers Pending Review</h3>
+                <div id="teacher-papers" class="paper-list">
+                    <!-- Papers will be populated from database -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="reviewed-tab">
+                <h3><i class="fas fa-check-circle"></i> Reviewed Papers</h3>
+                <div id="teacher-reviewed-papers" class="paper-list">
+                    <!-- Reviewed papers will be populated from database -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="students-tab">
+                <h3><i class="fas fa-user-graduate"></i> My Students</h3>
+                <div id="teacher-students" class="paper-list">
+                    <!-- Students will be populated from database -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Home Page -->
+        <section id="home-page" class="dashboard">
+            <div class="dashboard-header">
+                <h1><i class="fas fa-graduation-cap"></i> Research Portal</h1>
+                <p>A comprehensive platform for academic paper management</p>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">150+</div>
+                    <div class="stat-label">Research Papers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">40+</div>
+                    <div class="stat-label">Faculty Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">300+</div>
+                    <div class="stat-label">Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">15+</div>
+                    <div class="stat-label">Research Fields</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem;">
+                <div class="paper-card">
+                    <h3><i class="fas fa-user-graduate"></i> For Students</h3>
+                    <p>Submit your research papers to your teachers for review and feedback. Track your submission status and receive notifications.</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li>Upload research papers in PDF format</li>
+                        <li>Select your supervising teacher</li>
+                        <li>Track submission status</li>
+                        <li>Receive feedback and grades</li>
+                    </ul>
+                    <button id="student-login-home" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Student Login</button>
+                </div>
+                
+                <div class="paper-card">
+                    <h3><i class="fas fa-chalkboard-teacher"></i> For Teachers</h3>
+                    <p>Access and review research papers submitted by your students. Provide feedback, grades, and manage student submissions.</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li>View all student submissions</li>
+                        <li>Provide detailed feedback</li>
+                        <li>Grade and evaluate papers</li>
+                        <li>Manage multiple students</li>
+                    </ul>
+                    <button id="teacher-login-home" class="btn btn-secondary"><i class="fas fa-sign-in-alt"></i> Teacher Login</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem;">
+                <h2>How It Works</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-file-upload"></i></div>
+                        <h3>1. Upload Paper</h3>
+                        <p>Students upload their research papers with all necessary details</p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-search"></i></div>
+                        <h3>2. Teacher Review</h3>
+                        <p>Teachers access the papers, provide feedback and evaluations</p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-comments"></i></div>
+                        <h3>3. Feedback & Grading</h3>
+                        <p>Students receive detailed feedback and grades on their submissions</p>
+                    </div>
+                    <div style="text-align: center; padding: 1.5rem;">
+                        <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-database"></i></div>
+                        <h3>4. Secure Storage</h3>
+                        <p>All papers and data are securely stored in the database</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Research Portal</h3>
+                    <p>A comprehensive platform for academic paper management between students and teachers.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> info@researchportal.edu</li>
+                        <li><i class="fas fa-phone"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> University Campus, Education City</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Research Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced Database simulation
+        const database = {
+            users: [
+                { id: 1, username: 'student1', password: 'pass123', name: 'John Student', type: 'student', email: 'john.student@university.edu' },
+                { id: 2, username: 'teacher1', password: 'pass123', name: 'Dr. Smith', type: 'teacher', email: 'dr.smith@university.edu' },
+                { id: 3, username: 'student2', password: 'pass123', name: 'Jane Doe', type: 'student', email: 'jane.doe@university.edu' },
+                { id: 4, username: 'teacher2', password: 'pass123', name: 'Prof. Johnson', type: 'teacher', email: 'prof.johnson@university.edu' },
+                { id: 5, username: 'student3', password: 'pass123', name: 'Michael Brown', type: 'student', email: 'michael.brown@university.edu' }
+            ],
+            teachers: [
+                { id: 1, name: 'Dr. Smith', department: 'Computer Science', email: 'dr.smith@university.edu' },
+                { id: 2, name: 'Prof. Johnson', department: 'Mathematics', email: 'prof.johnson@university.edu' },
+                { id: 3, name: 'Dr. Williams', department: 'Physics', email: 'dr.williams@university.edu' },
+                { id: 4, name: 'Dr. Anderson', department: 'Biology', email: 'dr.anderson@university.edu' }
+            ],
+            papers: [
+                { 
+                    id: 1, 
+                    studentId: 1, 
+                    teacherId: 1, 
+                    title: 'Machine Learning Applications in Healthcare', 
+                    abstract: 'This paper explores various applications of machine learning in modern healthcare technology and their impact on patient outcomes.', 
+                    keywords: 'machine learning, healthcare, AI, technology',
+                    field: 'Computer Science',
+                    fileName: 'ml_healthcare_applications.pdf',
+                    submissionDate: '2023-10-15',
+                    status: 'submitted',
+                    grade: null,
+                    feedback: null
+                },
+                { 
+                    id: 2, 
+                    studentId: 3, 
+                    teacherId: 2, 
+                    title: 'Advanced Calculus Techniques in Engineering', 
+                    abstract: 'An analysis of advanced calculus techniques and their practical applications in various engineering fields.', 
+                    keywords: 'calculus, engineering, mathematics',
+                    field: 'Mathematics',
+                    fileName: 'calculus_engineering_techniques.pdf',
+                    submissionDate: '2023-10-10',
+                    status: 'reviewed',
+                    grade: 'A-',
+                    feedback: 'Excellent work with thorough analysis. Consider expanding the section on practical applications.'
+                },
+                { 
+                    id: 3, 
+                    studentId: 5, 
+                    teacherId: 1, 
+                    title: 'Blockchain Technology and Its Applications', 
+                    abstract: 'A comprehensive study of blockchain technology, its underlying principles, and potential applications beyond cryptocurrency.', 
+                    keywords: 'blockchain, cryptocurrency, distributed systems',
+                    field: 'Computer Science',
+                    fileName: 'blockchain_applications.pdf',
+                    submissionDate: '2023-10-05',
+                    status: 'revision',
+                    grade: 'B+',
+                    feedback: 'Good overview but needs more technical depth in the implementation section.'
+                }
+            ],
+            notifications: [
+                { id: 1, userId: 1, type: 'submission', message: 'Your paper "Machine Learning Applications" has been submitted successfully.', date: '2023-10-15', read: false },
+                { id: 2, userId: 1, type: 'review', message: 'Dr. Smith has reviewed your paper "Machine Learning Applications".', date: '2023-10-18', read: true }
+            ]
+        };
+
+        // Current user state
+        let currentUser = null;
+        let currentUserType = 'student';
+
+        // DOM Elements
+        const loginSection = document.getElementById('login-section');
+        const studentDashboard = document.getElementById('student-dashboard');
+        const teacherDashboard = document.getElementById('teacher-dashboard');
+        const homePage = document.getElementById('home-page');
+        const loginForm = document.getElementById('login-form');
+        const studentLoginBtn = document.getElementById('student-login-btn');
+        const teacherLoginBtn = document.getElementById('teacher-login-btn');
+        const studentLogoutBtn = document.getElementById('student-logout');
+        const teacherLogoutBtn = document.getElementById('teacher-logout');
+        const uploadForm = document.getElementById('upload-form');
+        const studentPapersContainer = document.getElementById('student-papers');
+        const teacherPapersContainer = document.getElementById('teacher-papers');
+        const teacherReviewedPapersContainer = document.getElementById('teacher-reviewed-papers');
+        const teacherStudentsContainer = document.getElementById('teacher-students');
+        const paperTeacherSelect = document.getElementById('paper-teacher');
+        const studentAlert = document.getElementById('student-alert');
+        const studentLoginHomeBtn = document.getElementById('student-login-home');
+        const teacherLoginHomeBtn = document.getElementById('teacher-login-home');
+        const loginBtn = document.getElementById('login-btn');
+        const homeLink = document.getElementById('home-link');
+        const studentNotificationsContainer = document.getElementById('student-notifications');
+
+        // Initialize the application
+        function init() {
+            // Populate teacher dropdown
+            populateTeacherDropdown();
+            
+            // Set up tab functionality
+            setupTabs();
+            
+            // Event listeners
+            studentLoginBtn.addEventListener('click', () => switchLoginType('student'));
+            teacherLoginBtn.addEventListener('click', () => switchLoginType('teacher'));
+            loginForm.addEventListener('submit', handleLogin);
+            studentLogoutBtn.addEventListener('click', handleLogout);
+            teacherLogoutBtn.addEventListener('click', handleLogout);
+            uploadForm.addEventListener('submit', handlePaperUpload);
+            studentLoginHomeBtn.addEventListener('click', () => showLoginSection('student'));
+            teacherLoginHomeBtn.addEventListener('click', () => showLoginSection('teacher'));
+            loginBtn.addEventListener('click', () => showLoginSection('student'));
+            homeLink.addEventListener('click', showHomePage);
+            
+            // Show home page by default
+            showHomePage();
+        }
+
+        // Set up tab functionality
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    
+                    // Load content if needed
+                    if (currentUser) {
+                        if (currentUser.type === 'student') {
+                            if (tabId === 'submissions') loadStudentPapers();
+                            if (tabId === 'notifications') loadStudentNotifications();
+                        } else {
+                            if (tabId === 'pending') loadTeacherPapers();
+                            if (tabId === 'reviewed') loadTeacherReviewedPapers();
+                            if (tabId === 'students') loadTeacherStudents();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Switch between student and teacher login
+        function switchLoginType(type) {
+            currentUserType = type;
+            
+            if (type === 'student') {
+                studentLoginBtn.classList.add('active');
+                teacherLoginBtn.classList.remove('active');
+            } else {
+                teacherLoginBtn.classList.add('active');
+                studentLoginBtn.classList.remove('active');
+            }
+        }
+
+        // Show login section
+        function showLoginSection(type) {
+            hideAllSections();
+            loginSection.classList.remove('hidden');
+            switchLoginType(type);
+        }
+
+        // Show home page
+        function showHomePage() {
+            hideAllSections();
+            homePage.classList.remove('hidden');
+        }
+
+        // Hide all sections
+        function hideAllSections() {
+            loginSection.classList.add('hidden');
+            studentDashboard.classList.add('hidden');
+            teacherDashboard.classList.add('hidden');
+            homePage.classList.add('hidden');
+        }
+
+        // Populate teacher dropdown
+        function populateTeacherDropdown() {
+            paperTeacherSelect.innerHTML = '<option value="">-- Select a teacher --</option>';
+            database.teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher.id;
+                option.textContent = teacher.name + ' - ' + teacher.department;
+                paperTeacherSelect.appendChild(option);
+            });
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Find user in database
+            const user = database.users.find(u => 
+                u.username === username && u.password === password && u.type === currentUserType
+            );
+            
+            if (user) {
+                currentUser = user;
+                showDashboard();
+            } else {
+                alert('Invalid credentials or user type mismatch');
+            }
+        }
+
+        // Show appropriate dashboard after login
+        function showDashboard() {
+            hideAllSections();
+            
+            if (currentUser.type === 'student') {
+                document.getElementById('student-name').textContent = currentUser.name;
+                document.getElementById('student-avatar').textContent = 
+                    currentUser.name.split(' ').map(n => n[0]).join('');
+                updateStudentStats();
+                loadStudentPapers();
+                loadStudentNotifications();
+                studentDashboard.classList.remove('hidden');
+            } else {
+                document.getElementById('teacher-name').textContent = currentUser.name;
+                document.getElementById('teacher-avatar').textContent = 
+                    currentUser.name.split(' ').map(n => n[0]).join('');
+                updateTeacherStats();
+                loadTeacherPapers();
+                teacherDashboard.classList.remove('hidden');
+            }
+        }
+
+        // Update student statistics
+        function updateStudentStats() {
+            const studentPapers = database.papers.filter(paper => paper.studentId === currentUser.id);
+            const submittedCount = studentPapers.length;
+            const reviewedCount = studentPapers.filter(p => p.status === 'reviewed' || p.status === 'revision').length;
+            const revisionCount = studentPapers.filter(p => p.status === 'revision').length;
+            
+            document.getElementById('student-papers-count').textContent = submittedCount;
+            document.getElementById('student-reviewed-count').textContent = reviewedCount;
+            document.getElementById('student-revision-count').textContent = revisionCount;
+        }
+
+        // Update teacher statistics
+        function updateTeacherStats() {
+            const teacherPapers = database.papers.filter(paper => paper.teacherId === currentUser.id);
+            const pendingCount = teacherPapers.filter(p => p.status === 'submitted').length;
+            const reviewedCount = teacherPapers.filter(p => p.status === 'reviewed' || p.status === 'revision').length;
+            
+            // Get unique students
+            const studentIds = [...new Set(teacherPapers.map(p => p.studentId))];
+            
+            document.getElementById('teacher-papers-count').textContent = pendingCount;
+            document.getElementById('teacher-reviewed-count').textContent = reviewedCount;
+            document.getElementById('teacher-students-count').textContent = studentIds.length;
+        }
+
+        // Handle logout
+        function handleLogout() {
+            currentUser = null;
+            showHomePage();
+        }
+
+        // Load student's papers
+        function loadStudentPapers() {
+            const studentPapers = database.papers.filter(paper => paper.studentId === currentUser.id);
+            
+            studentPapersContainer.innerHTML = '';
+            
+            if (studentPapers.length === 0) {
+                studentPapersContainer.innerHTML = '<div class="paper-card"><p>No papers submitted yet.</p></div>';
+                return;
+            }
+            
+            studentPapers.forEach(paper => {
+                const teacher = database.teachers.find(t => t.id === paper.teacherId);
+                const paperCard = createPaperCard(paper, teacher, true);
+                studentPapersContainer.appendChild(paperCard);
+            });
+        }
+
+        // Load student notifications
+        function loadStudentNotifications() {
+            const studentNotifications = database.notifications.filter(notification => notification.userId === currentUser.id);
+            
+            studentNotificationsContainer.innerHTML = '';
+            
+            if (studentNotifications.length === 0) {
+                studentNotificationsContainer.innerHTML = '<div class="paper-card"><p>No notifications yet.</p></div>';
+                return;
+            }
+            
+            studentNotifications.forEach(notification => {
+                const notificationCard = document.createElement('div');
+                notificationCard.className = 'paper-card';
+                
+                const header = document.createElement('div');
+                header.className = 'paper-header';
+                
+                const title = document.createElement('div');
+                title.className = 'paper-title';
+                title.textContent = notification.message;
+                
+                const date = document.createElement('div');
+                date.className = 'paper-meta';
+                date.textContent = notification.date;
+                
+                header.appendChild(title);
+                notificationCard.appendChild(header);
+                notificationCard.appendChild(date);
+                
+                studentNotificationsContainer.appendChild(notificationCard);
+            });
+        }
+
+        // Load teacher's papers
+        function loadTeacherPapers() {
+            const teacherPapers = database.papers.filter(paper => paper.teacherId === currentUser.id && paper.status === 'submitted');
+            
+            teacherPapersContainer.innerHTML = '';
+            
+            if (teacherPapers.length === 0) {
+                teacherPapersContainer.innerHTML = '<div class="paper-card"><p>No papers pending review.</p></div>';
+                return;
+            }
+            
+            teacherPapers.forEach(paper => {
+                const student = database.users.find(u => u.id === paper.studentId && u.type === 'student');
+                const paperCard = createPaperCard(paper, student, false);
+                teacherPapersContainer.appendChild(paperCard);
+            });
+        }
+
+        // Load teacher's reviewed papers
+        function loadTeacherReviewedPapers() {
+            const teacherPapers = database.papers.filter(paper => 
+                paper.teacherId === currentUser.id && (paper.status === 'reviewed' || paper.status === 'revision'));
+            
+            teacherReviewedPapersContainer.innerHTML = '';
+            
+            if (teacherPapers.length === 0) {
+                teacherReviewedPapersContainer.innerHTML = '<div class="paper-card"><p>No reviewed papers yet.</p></div>';
+                return;
+            }
+            
+            teacherPapers.forEach(paper => {
+                const student = database.users.find(u => u.id === paper.studentId && u.type === 'student');
+                const paperCard = createPaperCard(paper, student, false, true);
+                teacherReviewedPapersContainer.appendChild(paperCard);
+            });
+        }
+
+        // Load teacher's students
+        function loadTeacherStudents() {
+            const teacherPapers = database.papers.filter(paper => paper.teacherId === currentUser.id);
+            const studentIds = [...new Set(teacherPapers.map(p => p.studentId))];
+            const students = database.users.filter(u => studentIds.includes(u.id) && u.type === 'student');
+            
+            teacherStudentsContainer.innerHTML = '';
+            
+            if (students.length === 0) {
+                teacherStudentsContainer.innerHTML = '<div class="paper-card"><p>No students yet.</p></div>';
+                return;
+            }
+            
+            students.forEach(student => {
+                const studentCard = document.createElement('div');
+                studentCard.className = 'paper-card';
+                
+                const header = document.createElement('div');
+                header.className = 'paper-header';
+                
+                const title = document.createElement('div');
+                title.className = 'paper-title';
+                title.textContent = student.name;
+                
+                const email = document.createElement('div');
+                email.className = 'paper-meta';
+                email.textContent = student.email;
+                
+                const papersCount = document.createElement('div');
+                papersCount.className = 'paper-meta';
+                const count = teacherPapers.filter(p => p.studentId === student.id).length;
+                papersCount.innerHTML = `<i class="fas fa-file-alt"></i> ${count} paper(s) submitted`;
+                
+                header.appendChild(title);
+                studentCard.appendChild(header);
+                studentCard.appendChild(email);
+                studentCard.appendChild(papersCount);
+                
+                teacherStudentsContainer.appendChild(studentCard);
+            });
+        }
+
+        // Create paper card element
+        function createPaperCard(paper, user, isStudentView, isReviewed = false) {
+            const card = document.createElement('div');
+            card.className = 'paper-card';
+            
+            const header = document.createElement('div');
+            header.className = 'paper-header';
+            
+            const title = document.createElement('div');
+            title.className = 'paper-title';
+            title.textContent = paper.title;
+            
+            const status = document.createElement('div');
+            status.className = `paper-status status-${paper.status}`;
+            status.textContent = paper.status.charAt(0).toUpperCase() + paper.status.slice(1);
+            
+            header.appendChild(title);
+            header.appendChild(status);
+            
+            const meta = document.createElement('div');
+            meta.className = 'paper-meta';
+            
+            if (isStudentView) {
+                meta.innerHTML = `
+                    <span><i class="fas fa-chalkboard-teacher"></i> ${user.name}</span>
+                    <span><i class="fas fa-calendar"></i> ${paper.submissionDate}</span>
+                    <span><i class="fas fa-tag"></i> ${paper.field}</span>
+                `;
+            } else {
+                meta.innerHTML = `
+                    <span><i class="fas fa-user-graduate"></i> ${user.name}</span>
+                    <span><i class="fas fa-calendar"></i> ${paper.submissionDate}</span>
+                    <span><i class="fas fa-tag"></i> ${paper.field}</span>
+                `;
+            }
+            
+            const abstract = document.createElement('p');
+            abstract.textContent = paper.abstract;
+            
+            const keywords = document.createElement('div');
+            keywords.className = 'paper-meta';
+            keywords.innerHTML = `<i class="fas fa-tags"></i> ${paper.keywords}`;
+            
+            const actions = document.createElement('div');
+            actions.className = 'paper-actions';
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn btn-primary';
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
+            downloadBtn.addEventListener('click', () => {
+                alert(`Downloading ${paper.fileName}`);
+                // In a real app, this would trigger a file download
+            });
+            
+            actions.appendChild(downloadBtn);
+            
+            if (!isStudentView && !isReviewed) {
+                const reviewBtn = document.createElement('button');
+                reviewBtn.className = 'btn btn-secondary';
+                reviewBtn.innerHTML = '<i class="fas fa-edit"></i> Review';
+                reviewBtn.addEventListener('click', () => {
+                    openReviewModal(paper);
+                });
+                actions.appendChild(reviewBtn);
+            }
+            
+            if (isReviewed) {
+                const grade = document.createElement('div');
+                grade.className = 'paper-meta';
+                grade.innerHTML = `<i class="fas fa-star"></i> Grade: ${paper.grade}`;
+                card.appendChild(grade);
+                
+                if (paper.feedback) {
+                    const feedback = document.createElement('div');
+                    feedback.className = 'paper-meta';
+                    feedback.innerHTML = `<i class="fas fa-comment"></i> Feedback: ${paper.feedback}`;
+                    card.appendChild(feedback);
+                }
+            }
+            
+            card.appendChild(header);
+            card.appendChild(meta);
+            card.appendChild(abstract);
+            card.appendChild(keywords);
+            card.appendChild(actions);
+            
+            return card;
+        }
+
+        // Open review modal
+        function openReviewModal(paper) {
+            // In a real application, this would open a modal
+            // For this example, we'll use a simplified approach
+            const grade = prompt(`Enter grade for "${paper.title}" (A-F, with +/-):`, "A");
+            if (grade) {
+                const feedback = prompt("Enter your feedback:");
+                if (feedback !== null) {
+                    // Update paper in database
+                    const paperIndex = database.papers.findIndex(p => p.id === paper.id);
+                    if (paperIndex !== -1) {
+                        database.papers[paperIndex].status = 'reviewed';
+                        database.papers[paperIndex].grade = grade;
+                        database.papers[paperIndex].feedback = feedback;
+                        
+                        // Add notification
+                        const newNotification = {
+                            id: database.notifications.length + 1,
+                            userId: paper.studentId,
+                            type: 'review',
+                            message: `${currentUser.name} has reviewed your paper "${paper.title}".`,
+                            date: new Date().toISOString().split('T')[0],
+                            read: false
+                        };
+                        database.notifications.push(newNotification);
+                        
+                        alert('Paper reviewed successfully!');
+                        loadTeacherPapers();
+                        updateTeacherStats();
+                    }
+                }
+            }
+        }
+
+        // Handle paper upload
+        function handlePaperUpload(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('paper-title').value;
+            const abstract = document.getElementById('paper-abstract').value;
+            const keywords = document.getElementById('paper-keywords').value;
+            const teacherId = parseInt(document.getElementById('paper-teacher').value);
+            const field = document.getElementById('paper-field').value;
+            const file = document.getElementById('paper-file').files[0];
+            
+            if (!file || file.type !== 'application/pdf') {
+                showAlert(studentAlert, 'Please upload a PDF file', 'error');
+                return;
+            }
+            
+            // Create new paper object
+            const newPaper = {
+                id: database.papers.length + 1,
+                studentId: currentUser.id,
+                teacherId: teacherId,
+                title: title,
+                abstract: abstract,
+                keywords: keywords,
+                field: field,
+                fileName: file.name,
+                submissionDate: new Date().toISOString().split('T')[0],
+                status: 'submitted',
+                grade: null,
+                feedback: null
+            };
+            
+            // Add to database
+            database.papers.push(newPaper);
+            
+            // Add notification
+            const newNotification = {
+                id: database.notifications.length + 1,
+                userId: currentUser.id,
+                type: 'submission',
+                message: `Your paper "${title}" has been submitted successfully.`,
+                date: new Date().toISOString().split('T')[0],
+                read: false
+            };
+            database.notifications.push(newNotification);
+            
+            // Show success message
+            showAlert(studentAlert, 'Paper submitted successfully!', 'success');
+            
+            // Reset form
+            uploadForm.reset();
+            
+            // Update stats and reload papers
+            updateStudentStats();
+            loadStudentPapers();
+        }
+
+        // Show alert message
+        function showAlert(container, message, type) {
+            container.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

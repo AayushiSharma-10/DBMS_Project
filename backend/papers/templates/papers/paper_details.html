@@ -1,0 +1,17 @@
+{% extends 'papers/base.html' %}
+{% block title %}Paper Details{% endblock %}
+{% block content %}
+<div class="paper-card">
+    <h2>{{ paper.title }}</h2>
+    <p><strong>Abstract:</strong> {{ paper.abstract }}</p>
+    <p><strong>Keywords:</strong> {{ paper.keywords }}</p>
+    <p><strong>Field:</strong> {{ paper.field }}</p>
+    <p><strong>Status:</strong> <span class="paper-status status-{{ paper.status }}">{{ paper.status|title }}</span></p>
+
+    {% if paper.feedback %}
+    <div class="alert alert-success"><i class="fas fa-comment"></i> Feedback: {{ paper.feedback }}</div>
+    {% endif %}
+
+    <a href="{{ paper.file.url }}" class="btn btn-primary"><i class="fas fa-download"></i> Download PDF</a>
+</div>
+{% endblock %}

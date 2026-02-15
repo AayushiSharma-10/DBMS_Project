@@ -1,0 +1,44 @@
+{% extends "papers/base.html" %}
+{% block title %}Review Paper{% endblock %}
+
+{% block content %}
+<div class="col-md-8 mx-auto">
+    <div class="card shadow p-4">
+
+        <h2 class="text-primary">
+            <i class="bi bi-clipboard-check"></i> Review: {{ paper.title }}
+        </h2>
+
+        <p><strong>Student:</strong> {{ paper.student }}</p>
+        <p><strong>Status:</strong> {{ paper.status }}</p>
+
+        <a href="{{ paper.file.url }}" class="btn btn-warning mt-2" download>
+            <i class="bi bi-download"></i> Download file
+        </a>
+
+        <hr>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label class="fw-bold">Feedback:</label>
+            <textarea name="feedback" class="form-control" rows="5">{{ paper.feedback }}</textarea>
+
+            <label class="fw-bold mt-3">Grade:</label>
+            <input type="text" name="grade" class="form-control" value="{{ paper.grade }}">
+
+            <label class="fw-bold mt-3">Change Status:</label>
+            <select name="status" class="form-select">
+                <option value="submitted">Submitted</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="revision">Needs Revision</option>
+            </select>
+
+            <button class="btn btn-success w-100 mt-4">
+                <i class="bi bi-check2-circle"></i> Submit Review
+            </button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
